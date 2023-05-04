@@ -31,7 +31,7 @@ public class SchedulerController {
 
     @RequestMapping(path = "/create", method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
     public SchedulerResponseDto createNewJob(@RequestBody SchedulerRequestDto schedulerDto) {
-        final SchedulerDetail schedulerDetail = schedulerDto.getSchedulerDetail();
+        final SchedulerJobDetail schedulerDetail = schedulerDto.getSchedulerDetail();
         try {
             if (scheduler.checkExists(new JobKey(schedulerDetail.getJobName(), JobConstants.GROUP_NAME))) {
                 logger.info("Job {} already exists.", schedulerDto.getSchedulerDetail().getJobName());
@@ -54,7 +54,7 @@ public class SchedulerController {
 
     @GetMapping(path = "/update")
     public SchedulerResponseDto updateJob(@RequestBody final SchedulerRequestDto schedulerDto) {
-        final SchedulerDetail schedulerDetail = schedulerDto.getSchedulerDetail();
+        final SchedulerJobDetail schedulerDetail = schedulerDto.getSchedulerDetail();
         logger.info("Updating job with name {}", schedulerDetail.getJobName());
         if (deleteJob(schedulerDetail.getJobName())) {
             return createNewJob(schedulerDto);
@@ -80,13 +80,13 @@ public class SchedulerController {
     @GetMapping(path = "/list")
     public SchedulerResponseDto listJobs() {
         logger.info("Retrieve list of registered jobs.");
-        final List<SchedulerDetail> schedulerDetailList = new ArrayList<>();
+        final List<SchedulerJobDetail> schedulerDetailList = new ArrayList<>();
         try {
             for (final JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(JobConstants.GROUP_NAME))) {
                 final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
                 final CronTrigger trigger = (CronTrigger) scheduler.getTrigger(new TriggerKey(jobKey.getName() + JobConstants.JOB_TRIGGER_SUFFIX));
                 schedulerDetailList
-                        .add(new SchedulerDetail(jobKey.getName(), trigger.getCronExpression(), jobDetail.getJobDataMap().getString(JobConstants.CLASS_TOBE_EXECUTED)));
+                        .add(new SchedulerJobDetail(jobKey.getName(), trigger.getCronExpression(), jobDetail.getJobDataMap().getString(JobConstants.CLASS_TOBE_EXECUTED)));
             }
         } catch (SchedulerException e) {
             logger.error("Unable to retrieve list of registered jobs.", e.getMessage());
@@ -125,7 +125,7 @@ public class SchedulerController {
     }
 
     @RequestMapping(path = "/history", method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
-    public void registerHistory(@RequestBody final SchedulerHistory schedulerHistory){
+    public void registerHistory(@RequestBody final com.czertainly.api.model.scheduler.SchedulerJobHistory schedulerHistory){
         final Optional<SchedulerJobHistory> schedulerJobHistoryOptional = schedulerJobHistoryRepository.findById(schedulerHistory.getJobID());
         if (schedulerJobHistoryOptional.isPresent()) {
             final SchedulerJobHistory schedulerJobHistory = schedulerJobHistoryOptional.get();

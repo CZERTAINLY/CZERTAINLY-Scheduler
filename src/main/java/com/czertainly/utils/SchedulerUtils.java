@@ -1,6 +1,6 @@
 package com.czertainly.utils;
 
-import com.czertainly.api.model.scheduler.SchedulerExecutionStatus;
+import com.czertainly.api.model.scheduler.SchedulerJobExecutionStatus;
 import com.czertainly.constants.JobConstants;
 import com.czertainly.dao.entity.SchedulerJobHistory;
 import com.czertainly.jobs.SchedulerJob;
@@ -28,7 +28,7 @@ public class SchedulerUtils {
         final SchedulerJobHistory schedulerJobHistory = new SchedulerJobHistory();
         schedulerJobHistory.setJobName(jobName);
         schedulerJobHistory.setJobExecution(firedTime);
-        schedulerJobHistory.setSchedulerExecutionStatus(SchedulerExecutionStatus.UNKNOWN);
+        schedulerJobHistory.setSchedulerExecutionStatus(SchedulerJobExecutionStatus.UNKNOWN);
         return schedulerJobHistory;
     }
 

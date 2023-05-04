@@ -1,6 +1,6 @@
 package com.czertainly.dao.entity;
 
-import com.czertainly.api.model.scheduler.SchedulerExecutionStatus;
+import com.czertainly.api.model.scheduler.SchedulerJobExecutionStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class SchedulerJobHistory {
     private Date jobExecution;
 
     @Enumerated(EnumType.STRING)
-    private SchedulerExecutionStatus schedulerExecutionStatus;
+    private SchedulerJobExecutionStatus schedulerExecutionStatus;
 
 
 }

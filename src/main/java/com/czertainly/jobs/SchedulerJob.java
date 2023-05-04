@@ -1,6 +1,6 @@
 package com.czertainly.jobs;
 
-import com.czertainly.api.model.scheduler.SchedulerExecutionMessage;
+import com.czertainly.api.model.scheduler.SchedulerJobExecutionMessage;
 import com.czertainly.constants.JobConstants;
 import com.czertainly.dao.entity.SchedulerJobHistory;
 import com.czertainly.dao.repository.SchedulerJobHistoryRepository;
@@ -31,8 +31,8 @@ public class SchedulerJob implements Job {
         schedulerJobHistory = schedulerJobHistoryRepository.save(schedulerJobHistory);
 
         final String jobClassName = jobExecutionContext.getJobDetail().getJobDataMap().getString(JobConstants.CLASS_TOBE_EXECUTED);
-        final SchedulerExecutionMessage schedulerExecutionMessage
-                = new SchedulerExecutionMessage(schedulerJobHistory.getJobHistoryID(), jobName, jobClassName);
+        final SchedulerJobExecutionMessage schedulerExecutionMessage
+                = new SchedulerJobExecutionMessage(schedulerJobHistory.getJobHistoryID(), jobName, jobClassName);
         rabbitMQProducer.sendMessage(schedulerExecutionMessage);
         logger.info("Fired job was queued.", schedulerExecutionMessage);
     }

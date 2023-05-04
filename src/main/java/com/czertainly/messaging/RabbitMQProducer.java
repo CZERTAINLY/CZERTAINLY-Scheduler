@@ -1,6 +1,6 @@
 package com.czertainly.messaging;
 
-import com.czertainly.api.model.scheduler.SchedulerExecutionMessage;
+import com.czertainly.api.model.scheduler.SchedulerJobExecutionMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ public class RabbitMQProducer {
 
     private String routingKey = "scheduler";
 
-    public void sendMessage(final SchedulerExecutionMessage schedulerExecutionMessage) {
+    public void sendMessage(final SchedulerJobExecutionMessage schedulerExecutionMessage) {
         rabbitTemplate.convertAndSend(exchange, routingKey, schedulerExecutionMessage);
     }
 
