@@ -1,9 +1,10 @@
 package com.czertainly.controllers;
 
-import com.czertainly.api.model.scheduler.*;
+import com.czertainly.api.model.scheduler.SchedulerJobDto;
+import com.czertainly.api.model.scheduler.SchedulerRequestDto;
+import com.czertainly.api.model.scheduler.SchedulerResponseDto;
+import com.czertainly.api.model.scheduler.SchedulerStatus;
 import com.czertainly.constants.JobConstants;
-import com.czertainly.dao.entity.SchedulerJobHistory;
-import com.czertainly.dao.repository.SchedulerJobHistoryRepository;
 import com.czertainly.utils.SchedulerUtils;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.quartz.*;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -27,14 +27,12 @@ public class SchedulerController {
 
     private Scheduler scheduler;
 
-    private SchedulerJobHistoryRepository schedulerJobHistoryRepository;
-
     @RequestMapping(path = "/create", method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
     public SchedulerResponseDto createNewJob(@RequestBody SchedulerRequestDto schedulerDto) {
-        final SchedulerJobDetail schedulerDetail = schedulerDto.getSchedulerDetail();
+        final SchedulerJobDto schedulerDetail = schedulerDto.getSchedulerJob();
         try {
             if (scheduler.checkExists(new JobKey(schedulerDetail.getJobName(), JobConstants.GROUP_NAME))) {
-                logger.info("Job {} already exists.", schedulerDto.getSchedulerDetail().getJobName());
+                logger.info("Job {} already exists.", schedulerDto.getSchedulerJob().getJobName());
                 return new SchedulerResponseDto(SchedulerStatus.OK, schedulerDetail.getJobName());
             }
 
@@ -54,7 +52,7 @@ public class SchedulerController {
 
     @GetMapping(path = "/update")
     public SchedulerResponseDto updateJob(@RequestBody final SchedulerRequestDto schedulerDto) {
-        final SchedulerJobDetail schedulerDetail = schedulerDto.getSchedulerDetail();
+        final SchedulerJobDto schedulerDetail = schedulerDto.getSchedulerJob();
         logger.info("Updating job with name {}", schedulerDetail.getJobName());
         if (deleteJob(schedulerDetail.getJobName())) {
             return createNewJob(schedulerDto);
@@ -80,13 +78,13 @@ public class SchedulerController {
     @GetMapping(path = "/list")
     public SchedulerResponseDto listJobs() {
         logger.info("Retrieve list of registered jobs.");
-        final List<SchedulerJobDetail> schedulerDetailList = new ArrayList<>();
+        final List<SchedulerJobDto> schedulerDetailList = new ArrayList<>();
         try {
             for (final JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(JobConstants.GROUP_NAME))) {
                 final JobDetail jobDetail = scheduler.getJobDetail(jobKey);
                 final CronTrigger trigger = (CronTrigger) scheduler.getTrigger(new TriggerKey(jobKey.getName() + JobConstants.JOB_TRIGGER_SUFFIX));
                 schedulerDetailList
-                        .add(new SchedulerJobDetail(jobKey.getName(), trigger.getCronExpression(), jobDetail.getJobDataMap().getString(JobConstants.CLASS_TOBE_EXECUTED)));
+                        .add(new SchedulerJobDto(jobKey.getName(), trigger.getCronExpression(), jobDetail.getJobDataMap().getString(JobConstants.CLASS_TOBE_EXECUTED)));
             }
         } catch (SchedulerException e) {
             logger.error("Unable to retrieve list of registered jobs.", e.getMessage());
@@ -94,7 +92,7 @@ public class SchedulerController {
         }
 
         final SchedulerResponseDto schedulerResponseDto = new SchedulerResponseDto(SchedulerStatus.OK);
-        schedulerResponseDto.setSchedulerDetailList(schedulerDetailList);
+        schedulerResponseDto.setSchedulerJobList(schedulerDetailList);
         return schedulerResponseDto;
     }
 
@@ -124,19 +122,6 @@ public class SchedulerController {
         return new SchedulerResponseDto(SchedulerStatus.OK, jobName);
     }
 
-    @RequestMapping(path = "/history", method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
-    public void registerHistory(@RequestBody final com.czertainly.api.model.scheduler.SchedulerJobHistory schedulerHistory){
-        final Optional<SchedulerJobHistory> schedulerJobHistoryOptional = schedulerJobHistoryRepository.findById(schedulerHistory.getJobID());
-        if (schedulerJobHistoryOptional.isPresent()) {
-            final SchedulerJobHistory schedulerJobHistory = schedulerJobHistoryOptional.get();
-            schedulerJobHistory.setSchedulerExecutionStatus(schedulerHistory.getStatus());
-            schedulerJobHistoryRepository.save(schedulerJobHistory);
-            logger.info("SchedulerHistory name {} with ID {} is set on {}", schedulerJobHistory.getJobName(), schedulerHistory.getJobID(), schedulerHistory.getStatus().name());
-        } else {
-            logger.warn("There is no SchedulerHistory with ID {}", schedulerHistory.getJobID());
-        }
-    }
-
     // Setters
 
     @Autowired
@@ -144,8 +129,4 @@ public class SchedulerController {
         this.scheduler = schedulerFactoryBean.getScheduler();
     }
 
-    @Autowired
-    public void setSchedulerJobHistoryRepository(SchedulerJobHistoryRepository schedulerJobHistoryRepository) {
-        this.schedulerJobHistoryRepository = schedulerJobHistoryRepository;
-    }
 }
