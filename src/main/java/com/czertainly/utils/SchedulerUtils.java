@@ -1,12 +1,8 @@
 package com.czertainly.utils;
 
-import com.czertainly.api.model.scheduler.SchedulerJobExecutionStatus;
 import com.czertainly.constants.JobConstants;
-import com.czertainly.dao.entity.SchedulerJobHistory;
 import com.czertainly.jobs.SchedulerJob;
 import org.quartz.*;
-
-import java.util.Date;
 
 public class SchedulerUtils {
 
@@ -22,14 +18,6 @@ public class SchedulerUtils {
                 .withIdentity(jobName + JobConstants.JOB_TRIGGER_SUFFIX, JobConstants.GROUP_NAME)
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                 .build();
-    }
-
-    public static SchedulerJobHistory prepareSchedulerJobHistory(final String jobName, final Date firedTime) {
-        final SchedulerJobHistory schedulerJobHistory = new SchedulerJobHistory();
-        schedulerJobHistory.setJobName(jobName);
-        schedulerJobHistory.setJobExecution(firedTime);
-        schedulerJobHistory.setSchedulerExecutionStatus(SchedulerJobExecutionStatus.UNKNOWN);
-        return schedulerJobHistory;
     }
 
 

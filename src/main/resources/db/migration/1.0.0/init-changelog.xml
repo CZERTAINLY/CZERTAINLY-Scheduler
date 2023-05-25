@@ -405,4 +405,5 @@
                                  referencedColumnNames="sched_name,job_name,job_group"
                                  referencedTableName="qrtz_job_details" validate="true"/>
     </changeSet>
+
 </databaseChangeLog>
