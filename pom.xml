@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.czertainly</groupId>
             <artifactId>interfaces</artifactId>
-            <version>2.7.2-SNAPSHOT</version>
+            <version>2.8.1-SNAPSHOT</version>
         </dependency>
 
         <!-- Spring libraries -->
