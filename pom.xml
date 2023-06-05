@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <sonar.projectKey>3KeyCompany_CZERTAINLY-Scheduler</sonar.projectKey>
     </properties>
 
     <dependencies>

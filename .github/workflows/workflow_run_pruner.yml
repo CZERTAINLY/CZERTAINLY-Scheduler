@@ -56,7 +56,6 @@ jobs:
 
           const workflows = [
             'build.yml',
-            'publish-package.yml',
             'workflow_run_pruner.yml'
           ]
 
