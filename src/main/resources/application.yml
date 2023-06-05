@@ -1,0 +1,54 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  quartz:
+    properties:
+      org:
+        quartz:
+          dataSource:
+            myDS:
+              driver: org.postgresql.Driver
+              user: ${JDBC_USERNAME}
+              password: ${JDBC_PASSWORD}
+              URL: ${JDBC_URL}
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            isClustered: 'true'
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            dataSource: myDS
+          scheduler:
+            instanceName: czertainly-scheduler
+            instanceId: AUTO
+    jdbc:
+      initialize-schema: never
+    job-store-type: jdbc
+  rabbitmq:
+    password: ${RABBITMQ_PASSWORD}
+    port: ${RABBITMQ_PORT:5672}
+    host: ${RABBITMQ_URL}
+    username: ${RABBITMQ_USERNAME}
+  jpa:
+    generate-ddl: 'true'
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.default_schema: ${DB_SCHEMA:scheduler}
+  liquibase:
+    change-log: classpath:/db/migration/db.changelog-master.xml
+  datasource:
+    password: ${JDBC_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    username: ${JDBC_USERNAME}
+    url: ${JDBC_URL}
+
+management:
+  endpoints:
+    web:
+      base-path: '/'
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true
