@@ -26,7 +26,7 @@ spring:
   rabbitmq:
     password: ${RABBITMQ_PASSWORD}
     port: ${RABBITMQ_PORT:5672}
-    host: ${RABBITMQ_URL}
+    host: ${RABBITMQ_HOST}
     username: ${RABBITMQ_USERNAME}
   jpa:
     generate-ddl: 'true'
@@ -36,6 +36,7 @@ spring:
       hibernate.default_schema: ${DB_SCHEMA:scheduler}
   liquibase:
     change-log: classpath:/db/migration/db.changelog-master.xml
+    default-schema: ${DB_SCHEMA:scheduler}
   datasource:
     password: ${JDBC_PASSWORD}
     driver-class-name: org.postgresql.Driver
