@@ -22,4 +22,5 @@
 | `RABBITMQ_PORT`     | AMQP port where the RabbitMQ service is exposed          | ![](https://img.shields.io/badge/-NO-red.svg)      | `5672`        |
 | `RABBITMQ_USERNAME` | Username to access RabbitMQ service                      | ![](https://img.shields.io/badge/-YES-success.svg) | `N/A`         |
 | `RABBITMQ_PASSWORD` | Password to access RabbitMQ service                      | ![](https://img.shields.io/badge/-YES-success.svg) | `N/A`         |
+| `RABBITMQ_VHOST`    | Virtual host to access RabbitMQ service                  | ![](https://img.shields.io/badge/-NO-red.svg)      | `czertainly`  |
 
