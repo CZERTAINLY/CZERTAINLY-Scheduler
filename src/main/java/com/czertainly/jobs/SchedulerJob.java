@@ -19,14 +19,13 @@ public class SchedulerJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        logger.info("SchedulerJob was fired.");
         final String jobName = jobExecutionContext.getJobDetail().getKey().getName();
+        logger.info("SchedulerJob {} was fired.", jobName);
 
         final String jobClassName = jobExecutionContext.getJobDetail().getJobDataMap().getString(JobConstants.CLASS_TOBE_EXECUTED);
         final SchedulerJobExecutionMessage schedulerExecutionMessage
                 = new SchedulerJobExecutionMessage(jobName, jobClassName);
         rabbitMQProducer.sendMessage(schedulerExecutionMessage);
-        logger.info("Fired job was queued.", schedulerExecutionMessage);
     }
 
     // SETTERs
