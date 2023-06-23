@@ -1,4 +1,4 @@
-package com.czertainly.config;
+package com.czertainly.scheduler.config;
 
 import liquibase.change.DatabaseChange;
 import liquibase.integration.spring.SpringLiquibase;

@@ -1,11 +1,11 @@
-package com.czertainly.controllers.impl;
+package com.czertainly.scheduler.controllers.impl;
 
 import com.czertainly.api.exception.ConnectorException;
 import com.czertainly.api.exception.SchedulerException;
 import com.czertainly.api.model.scheduler.SchedulerRequestDto;
 import com.czertainly.api.model.scheduler.SchedulerResponseDto;
-import com.czertainly.controllers.SchedulerController;
-import com.czertainly.service.SchedulerService;
+import com.czertainly.scheduler.controllers.SchedulerController;
+import com.czertainly.scheduler.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 

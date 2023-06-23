@@ -1,4 +1,4 @@
-package com.czertainly.messaging;
+package com.czertainly.scheduler.messaging;
 
 import com.czertainly.api.model.scheduler.SchedulerJobExecutionMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

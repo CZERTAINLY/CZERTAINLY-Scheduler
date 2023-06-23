@@ -1,4 +1,4 @@
-package com.czertainly.controllers;
+package com.czertainly.scheduler.controllers;
 
 import com.czertainly.api.exception.ConnectorException;
 import com.czertainly.api.exception.SchedulerException;

@@ -1,4 +1,4 @@
-package com.czertainly.constants;
+package com.czertainly.scheduler.constants;
 
 public class JobConstants {
 

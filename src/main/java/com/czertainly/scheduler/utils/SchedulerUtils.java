@@ -1,7 +1,7 @@
-package com.czertainly.utils;
+package com.czertainly.scheduler.utils;
 
-import com.czertainly.constants.JobConstants;
-import com.czertainly.jobs.SchedulerJob;
+import com.czertainly.scheduler.constants.JobConstants;
+import com.czertainly.scheduler.jobs.SchedulerJob;
 import org.quartz.*;
 
 public class SchedulerUtils {

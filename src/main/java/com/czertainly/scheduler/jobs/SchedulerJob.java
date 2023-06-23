@@ -1,8 +1,8 @@
-package com.czertainly.jobs;
+package com.czertainly.scheduler.jobs;
 
 import com.czertainly.api.model.scheduler.SchedulerJobExecutionMessage;
-import com.czertainly.constants.JobConstants;
-import com.czertainly.messaging.RabbitMQProducer;
+import com.czertainly.scheduler.constants.JobConstants;
+import com.czertainly.scheduler.messaging.RabbitMQProducer;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;

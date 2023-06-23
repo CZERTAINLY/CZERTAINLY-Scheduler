@@ -1,13 +1,15 @@
-package com.czertainly.service.impl;
+package com.czertainly.scheduler.service.impl;
 
 import com.czertainly.api.exception.SchedulerException;
+import com.czertainly.api.exception.ValidationError;
+import com.czertainly.api.exception.ValidationException;
 import com.czertainly.api.model.scheduler.SchedulerJobDto;
 import com.czertainly.api.model.scheduler.SchedulerRequestDto;
 import com.czertainly.api.model.scheduler.SchedulerResponseDto;
 import com.czertainly.api.model.scheduler.SchedulerStatus;
-import com.czertainly.constants.JobConstants;
-import com.czertainly.service.SchedulerService;
-import com.czertainly.utils.SchedulerUtils;
+import com.czertainly.scheduler.constants.JobConstants;
+import com.czertainly.scheduler.service.SchedulerService;
+import com.czertainly.scheduler.utils.SchedulerUtils;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
@@ -34,6 +36,10 @@ public class SchedulerServiceImpl implements SchedulerService {
             if (scheduler.checkExists(new JobKey(schedulerDetail.getJobName(), JobConstants.GROUP_NAME))) {
                 logger.info("Job {} already exists.", schedulerDto.getSchedulerJob().getJobName());
                 return;
+            }
+
+            if(!CronExpression.isValidExpression(schedulerDetail.getCronExpression())) {
+                throw new ValidationException(ValidationError.create("Invalid format of CRON expression"));
             }
 
             logger.info("Scheduling new job withe name {}", schedulerDetail.getJobName());
