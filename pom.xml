@@ -10,7 +10,7 @@
 
     <groupId>com.czertainly</groupId>
     <artifactId>CZERTAINLY-Scheduler</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>CZERTAINLY-Scheduler</name>
 
     <description>CZERTAINLY-Scheduler</description>
