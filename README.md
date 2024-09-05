@@ -1,6 +1,6 @@
 # CZERTAINLY Scheduler
 
-> This repository is part of the commercial open-source project CZERTAINLY. You can find more information about the project at [CZERTAINLY](https://github.com/3KeyCompany/CZERTAINLY) repository, including the contribution guide.
+> This repository is part of the commercial open-source project CZERTAINLY. You can find more information about the project at [CZERTAINLY](https://github.com/CZERTAINLY/CZERTAINLY) repository, including the contribution guide.
 
 ## Database requirements
 
@@ -8,7 +8,7 @@
 
 ## Docker container
 
-`Scheudler` is provided as a Docker container. Use the `harbor.3key.company/czertainly/czertainly-scheduler:tagname` to pull the required image from the repository. It can be configured using the following environment variables:
+`Scheudler` is provided as a Docker container. Use the `czertainly/czertainly-scheduler:tagname` to pull the required image from the repository. It can be configured using the following environment variables:
 
 | Variable            | Description                                              | Required                                           | Default value |
 |---------------------|----------------------------------------------------------|----------------------------------------------------|---------------|
