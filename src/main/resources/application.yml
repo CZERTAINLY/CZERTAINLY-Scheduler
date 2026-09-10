@@ -6,6 +6,8 @@ spring:
     properties:
       org:
         quartz:
+          threadPool:
+            threadCount: ${QUARTZ_THREAD_COUNT:10}
           jobStore:
             isClustered: 'true'
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
@@ -52,17 +54,21 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     hikari:
-      # The Quartz job store shares this pool with JPA, so it is sized for both. Job data can carry
-      # values that must not reach the log: PostgreSQL answers a constraint violation with a DETAIL
-      # line quoting the whole failing row, and pgjdbc copies it into the exception message, which
-      # Hibernate logs at ERROR upstream of every catch. The constraint name survives, which is what
-      # error handling reads.
+      # Sized for this service rather than copied from core. The Quartz job store shares this pool
+      # with JPA, and its demand is the worker threads above plus the cluster check-in and misfire
+      # handler threads -- around thirteen -- so twenty leaves headroom without over-reserving.
+      # Pools multiply by replica, and every connection is a Postgres backend process.
+      #
+      # Job data can carry values that must not reach the log: PostgreSQL answers a constraint
+      # violation with a DETAIL line quoting the whole failing row, and pgjdbc copies it into the
+      # exception message, which Hibernate logs at ERROR upstream of every catch. The constraint
+      # name survives, which is what error handling reads.
       data-source-properties:
         logServerErrorDetail: false
       connectionTimeout: ${CONNECTION_POOL_CONNECTION_TIMEOUT:30000}
       idleTimeout: ${CONNECTION_POOL_IDLE_TIMEOUT:600000}
       maxLifetime: ${CONNECTION_POOL_MAX_LIFETIME:1800000}
-      maximumPoolSize: ${CONNECTION_POOL_MAX_POOL_SIZE:40}
+      maximumPoolSize: ${CONNECTION_POOL_MAX_POOL_SIZE:20}
       schema: ${DB_SCHEMA:scheduler}
     password: ${JDBC_PASSWORD}
     url: ${JDBC_URL}
