@@ -6,17 +6,9 @@ spring:
     properties:
       org:
         quartz:
-          dataSource:
-            myDS:
-              driver: org.postgresql.Driver
-              user: ${JDBC_USERNAME}
-              password: ${JDBC_PASSWORD}
-              URL: ${JDBC_URL}
           jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX
             isClustered: 'true'
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-            dataSource: myDS
             tablePrefix: ${DB_SCHEMA:scheduler}.qrtz_
           scheduler:
             instanceName: ilm-scheduler
