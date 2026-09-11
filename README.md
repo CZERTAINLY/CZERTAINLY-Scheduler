@@ -16,6 +16,12 @@
 | `JDBC_USERNAME`                | Username to access the database                                    | ![](https://img.shields.io/badge/-YES-success.svg)    | `N/A`         |
 | `JDBC_PASSWORD`                | Password to access the database                                    | ![](https://img.shields.io/badge/-YES-success.svg)    | `N/A`         |
 | `DB_SCHEMA`                    | Database schema to use                                             | ![](https://img.shields.io/badge/-NO-red.svg)         | `scheduler`   |
+| `CONNECTION_POOL_MAX_POOL_SIZE`| Maximum size of the database connection pool                       | ![](https://img.shields.io/badge/-NO-red.svg)         | `20`          |
+| `CONNECTION_POOL_MIN_IDLE`     | Minimum idle connections kept in the pool                          | ![](https://img.shields.io/badge/-NO-red.svg)         | `5`           |
+| `CONNECTION_POOL_CONNECTION_TIMEOUT` | Time to wait for a connection from the pool (ms)             | ![](https://img.shields.io/badge/-NO-red.svg)         | `30000`       |
+| `CONNECTION_POOL_IDLE_TIMEOUT` | How long an idle connection is kept before removal (ms)            | ![](https://img.shields.io/badge/-NO-red.svg)         | `600000`      |
+| `CONNECTION_POOL_MAX_LIFETIME` | Maximum lifetime of a pooled connection (ms)                       | ![](https://img.shields.io/badge/-NO-red.svg)         | `1800000`     |
+| `QUARTZ_THREAD_COUNT`          | Quartz worker threads available to run jobs concurrently           | ![](https://img.shields.io/badge/-NO-red.svg)         | `10`          |
 | `PORT`                         | Port where the service is exposed                                  | ![](https://img.shields.io/badge/-NO-red.svg)         | `8080`        |
 | `JAVA_OPTS`                    | Customize Java system properties for running application           | ![](https://img.shields.io/badge/-NO-red.svg)         | `N/A`         |
 | `BROKER_TYPE`                  | Message broker type (`RABBITMQ` or `SERVICEBUS`)                   | ![](https://img.shields.io/badge/-NO-red.svg)         | `RABBITMQ`    |

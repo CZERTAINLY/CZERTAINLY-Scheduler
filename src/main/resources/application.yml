@@ -6,17 +6,11 @@ spring:
     properties:
       org:
         quartz:
-          dataSource:
-            myDS:
-              driver: org.postgresql.Driver
-              user: ${JDBC_USERNAME}
-              password: ${JDBC_PASSWORD}
-              URL: ${JDBC_URL}
+          threadPool:
+            threadCount: ${QUARTZ_THREAD_COUNT:10}
           jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX
             isClustered: 'true'
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-            dataSource: myDS
             tablePrefix: ${DB_SCHEMA:scheduler}.qrtz_
           scheduler:
             instanceName: ilm-scheduler
@@ -58,10 +52,32 @@ spring:
     change-log: classpath:/db/migration/db.changelog-master.xml
     default-schema: ${DB_SCHEMA:scheduler}
   datasource:
-    password: ${JDBC_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    username: ${JDBC_USERNAME}
+    hikari:
+      # Sized for this service rather than copied from core. The only sustained user of this pool is
+      # the Quartz job store: the worker threads above, plus the cluster check-in and misfire handler
+      # threads -- around thirteen at peak -- so twenty is headroom, not a ceiling to grow into.
+      #
+      # minimumIdle is set below maximumPoolSize, which HikariCP does not do by default and advises
+      # against for request-serving applications. This service is the opposite of that: mostly idle
+      # between fires, with brief bursts. Holding twenty connections open per replica would reserve
+      # them from every other service on the same database, and pools multiply by replica.
+      #
+      # Job data can carry values that must not reach the log. PostgreSQL answers a constraint
+      # violation with a DETAIL line quoting the whole failing row and pgjdbc copies it into the
+      # exception message; SchedulerServiceImpl logs the SchedulerException with its cause, so the
+      # message reaches the log intact. The constraint name survives this setting.
+      data-source-properties:
+        logServerErrorDetail: false
+      connectionTimeout: ${CONNECTION_POOL_CONNECTION_TIMEOUT:30000}
+      idleTimeout: ${CONNECTION_POOL_IDLE_TIMEOUT:600000}
+      maxLifetime: ${CONNECTION_POOL_MAX_LIFETIME:1800000}
+      maximumPoolSize: ${CONNECTION_POOL_MAX_POOL_SIZE:20}
+      minimumIdle: ${CONNECTION_POOL_MIN_IDLE:5}
+      schema: ${DB_SCHEMA:scheduler}
+    password: ${JDBC_PASSWORD}
     url: ${JDBC_URL}
+    username: ${JDBC_USERNAME}
 
 management:
   endpoints:
